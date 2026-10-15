@@ -44,6 +44,16 @@ class SetupTests(unittest.TestCase):
         self.assertIn('no paid submissions authorised', text)
         self.assertIn('not configured', text)
 
+    def test_init_preserves_setup_progress_for_returning_users(self):
+        result = studio.initialise(self.root)
+        self.assertIn('setup/status.md', result['created'])
+        status = self.root / 'setup/status.md'
+        self.assertIn('never API keys', status.read_text())
+        status.write_text('Local edit checked. No generation requested.')
+        again = studio.initialise(self.root)
+        self.assertIn('setup/status.md', again['preserved'])
+        self.assertEqual(status.read_text(), 'Local edit checked. No generation requested.')
+
     def test_installer_both_hosts_in_path_with_spaces(self):
         targets = installer.install('both', 'project', self.root)
         for t in targets:
@@ -96,6 +106,49 @@ class SetupTests(unittest.TestCase):
         with patch.object(studio.shutil, 'which', return_value=None):
             self.assertEqual(studio.doctor(self.root, 'edit')[1], 1)
             self.assertEqual(studio.doctor(self.root, 'plan')[1], 0)
+
+    def test_missing_tools_have_actions_and_optional_tools_do_not_block_planning(self):
+        studio.initialise(self.root)
+        with patch.object(studio.shutil, 'which', return_value=None):
+            plan, plan_code = studio.doctor(self.root, 'plan')
+            generation, generation_code = studio.doctor(self.root, 'generate')
+        self.assertEqual(plan_code, 0)
+        self.assertEqual(generation_code, 1)
+        plan_steps = {s['check']: s for s in plan['next_steps']}
+        generation_steps = {s['check']: s for s in generation['next_steps']}
+        for name in ('ffmpeg', 'ffprobe', 'node', 'blender', 'higgsfield-cli'):
+            self.assertTrue(plan_steps[name]['optional'])
+            self.assertTrue(plan_steps[name]['action'])
+        for name in ('ffmpeg', 'ffprobe', 'higgsfield-cli', 'higgsfield-auth'):
+            self.assertFalse(generation_steps[name]['optional'])
+        self.assertIn('auth login', generation_steps['higgsfield-auth']['action'])
+        self.assertIn('Never request a token in chat', generation_steps['higgsfield-auth']['action'])
+        self.assertNotIn('higgsfield-auth', plan_steps)
+
+    def test_working_tools_do_not_get_reinstallation_actions(self):
+        studio.initialise(self.root)
+        def fake(args, timeout=30):
+            return subprocess.CompletedProcess(args, 0, 'v24.0.0\n', '')
+        with patch.object(studio.shutil, 'which', side_effect=lambda x: '/tools/' + x), patch.object(studio, 'run', side_effect=fake):
+            report, code = studio.doctor(self.root, 'edit')
+        self.assertEqual(code, 0)
+        checks = {s['check'] for s in report['next_steps']}
+        self.assertFalse(checks & {'python', 'studio-policy', 'ffmpeg', 'ffprobe', 'node', 'blender', 'higgsfield-cli'})
+        self.assertIn('host-tools', checks)
+        self.assertIn('project-choices', checks)
+        self.assertFalse(report['production_ready'])
+
+    def test_online_success_keeps_private_account_payload_out_of_actions(self):
+        studio.initialise(self.root)
+        def fake(args, timeout=30):
+            return subprocess.CompletedProcess(args, 0, '{"token":"fixture-secret-not-real","email":"fixture@example.invalid"}', '')
+        with patch.object(studio.shutil, 'which', return_value=None), patch.object(studio, 'run', side_effect=fake):
+            report, _ = studio.doctor(self.root, 'generate', True, '/tools/higgsfield')
+        encoded = json.dumps(report)
+        self.assertNotIn('fixture-secret-not-real', encoded)
+        self.assertNotIn('fixture@example.invalid', encoded)
+        self.assertNotIn('higgsfield-auth', {s['check'] for s in report['next_steps']})
+        self.assertFalse(report['production_ready'])
 
     def test_consent_supports_a_named_reviewer_not_only_the_original_owner(self):
         self.assertIsNotNone(verifier.CONSENT.fullmatch('yes, 2020-01-01, confirmed by Alex Chen'))

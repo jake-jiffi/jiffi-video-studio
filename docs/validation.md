@@ -8,10 +8,11 @@ Checked locally on 15 October 2026:
 
 | Check | Result |
 | --- | --- |
-| Python setup, installer and actual-media delivery tests | 32 passed |
+| Python setup, installer and actual-media delivery tests | 36 passed |
 | Node audio-review tests with synthetic media and mocked API | 9 passed |
 | Standalone installation in both host layouts, including spaces and collision protection | Passed |
 | Fresh studio initialisation and repeated-run preservation | Passed |
+| Guided setup: missing-tool actions, optional tools, retained setup progress and account-response privacy | Passed in automated helper tests |
 | Synthetic H.264/AAC encode, full decode and delivery check | Passed |
 | Claude Code 2.1.296 strict marketplace, manifest and skill validation | Passed |
 | Codex CLI 0.155.1 local marketplace installation and enabled-plugin discovery | Passed |
@@ -22,6 +23,15 @@ The live read-only checks used an existing authenticated account. They do not
 prove a new user's login or model entitlement. No paid generation, media upload
 or live Gemini review was performed for this packaging release. Remote GitHub
 installation and CI results are recorded in the release notes after publication.
+
+Version 0.2.0 adds Stage 0 and route-specific repair guidance. The instructions
+were reviewed against a planning-only request without execution access, a
+supplied-footage edit without paid accounts, a fresh generation setup, a returning
+studio and a changed host/workspace. These are instruction reviews, not claims
+that a live agent onboarding conversation or paid production was run on every host.
+The executable checks cover missing dependencies, next actions, preserved setup
+records, offline behaviour and suppression of both successful and failed private
+account responses.
 
 ## Historical production evidence
 

@@ -10,6 +10,24 @@ from pathlib import Path
 
 SKILL = Path(__file__).resolve().parents[1]
 
+SETUP_ACTIONS = {
+    'python': 'Install Python 3.9 or newer from python.org/downloads, then rerun this check in the execution host.',
+    'studio-policy': 'Run studio.py init for this studio. Review the preserved or new AGENTS.md with the user; installation grants no budget or upload permission.',
+    'ffmpeg': 'Install an FFmpeg build with libx264 and AAC from the routes listed at ffmpeg.org/download.html. Put ffmpeg and ffprobe on PATH, restart the host if needed, then run doctor and smoke.',
+    'ffprobe': 'Install ffprobe with FFmpeg and put both executables on PATH. Restart the execution host if needed, then run doctor and smoke.',
+    'node': 'If using the Gemini adapter or npm installation route, install Node.js 22 or newer from nodejs.org/en/download and restart the execution host.',
+    'blender': 'Only if spatial rehearsal is selected, install Blender, provide its executable path and verify one small headless render.',
+    'higgsfield-cli': 'For Higgsfield generation, follow higgsfield.ai/cli or pass --higgsfield-cli with an installed wrapper path. Then complete auth login in the provider flow.',
+    'higgsfield-auth': 'After CLI installation, run higgsfield auth login, let the user sign in in the provider flow, select their workspace, then rerun doctor --mode generate --online. Never request a token in chat.',
+    'higgsfield-account': 'Run higgsfield auth login and let the user complete the provider flow. Then rerun the online doctor; do not copy authentication output into chat.',
+    'higgsfield-workspaces': 'After login, inspect available workspaces locally, ask which to use if ambiguous, select it with workspace set, then rerun the online doctor.',
+    'higgsfield-models': 'Check the selected workspace and account entitlement, then retry the model catalogue read. Do not buy or upgrade a plan automatically.',
+    'host-tools': 'Inspect this session for file, shell and media tools. If execution is unavailable, continue the scope in chat and explain how to resume in a connected local host.',
+    'project-choices': 'Read the existing policy and brief. Ask only for missing route, output, provider, permission and budget choices that affect this project. Preserve earlier decisions.',
+    'resolve': 'Only for Resolve editing, open Resolve Studio, verify local scripting or the configured MCP, then test a separate synthetic project and restore the previous project.',
+    'gemini-review': 'Only if advisory review is selected, configure GEMINI_API_KEY or GOOGLE_API_KEY privately in the execution process environment, then run gemini-review.mjs --check. Never paste the value into chat, files or reports.',
+}
+
 
 def run(argv, timeout=30):
     return subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
@@ -19,9 +37,12 @@ def initialise(root):
     root = root.expanduser().resolve()
     # Existing studios may contain work. Never replace policy or registry files.
     root.mkdir(parents=True, exist_ok=True)
+    for name in ('projects', 'setup'):
+        (root / name).mkdir(exist_ok=True)
     names = {'AGENTS.md': SKILL / 'assets/studio-policy.md',
              'CLAUDE.md': SKILL / 'assets/claude-studio.md',
-             'cast-registry.json': SKILL / 'assets/cast-registry.template.json'}
+             'cast-registry.json': SKILL / 'assets/cast-registry.template.json',
+             'setup/status.md': SKILL / 'assets/setup-status-template.md'}
     written, preserved = [], []
     for name, source in names.items():
         target = root / name
@@ -31,10 +52,8 @@ def initialise(root):
             written.append(name)
         except FileExistsError:
             preserved.append(name)
-    for name in ('projects', 'setup'):
-        (root / name).mkdir(exist_ok=True)
     return {'studio': str(root), 'created': written, 'preserved': preserved,
-            'next': 'Set your project budget, allowed providers and data policy in AGENTS.md.'}
+            'next': 'Follow Stage 0 in the skill: inspect this host, ask only for missing project choices, run doctor for the chosen route and record non-secret setup evidence in setup/status.md.'}
 
 
 def doctor(root, mode='edit', online=False, higgsfield_cli=None):
@@ -93,14 +112,18 @@ def doctor(root, mode='edit', online=False, higgsfield_cli=None):
     elif mode == 'generate':
         record('higgsfield-auth', 'not-tested', 'Run doctor --mode generate --online after signing in. No generation is submitted.')
     record('host-tools', 'not-tested', 'The agent must inspect this session’s shell, files, image inspection and browser tools. This command cannot see MCP connections.')
+    record('project-choices', 'not-tested', 'An existing policy file does not prove the current project’s scope, permissions or budget are settled. Reuse existing decisions where applicable.')
     record('resolve', 'optional-not-tested', 'Test the selected MCP or local Python scripting route in a separate project. An installed app is not a verified connection.')
     record('gemini-review', 'optional-not-tested', 'Use gemini-review.mjs --check if authorised. Keys are not read by this doctor.')
     blocked = any(c['status'] in ('missing', 'blocked') for c in checks)
+    next_steps = [{'check': c['name'], 'status': c['status'],
+                   'optional': c['status'].startswith('optional-'), 'action': SETUP_ACTIONS[c['name']]}
+                  for c in checks if c['status'] not in ('pass', 'info') and c['name'] in SETUP_ACTIONS]
     return {'checked_at_utc': datetime.now(timezone.utc).isoformat(), 'mode': mode,
             'local_prerequisites': 'blocked' if blocked else 'pass',
             'production_ready': False,
             'scope': 'Prerequisite inventory only. Account, tool execution, budget, data permission and human review need separate evidence.',
-            'checks': checks}, 1 if blocked else 0
+            'checks': checks, 'next_steps': next_steps}, 1 if blocked else 0
 
 
 def smoke():

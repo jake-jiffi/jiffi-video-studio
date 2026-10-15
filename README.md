@@ -18,7 +18,8 @@ The same skill files serve **Codex, ChatGPT and Claude Code**. Full production r
 
 ```mermaid
 flowchart LR
-  A[Concept, handoff or footage] --> B[Scope, timed script and budget]
+  A[Concept, handoff or footage] --> S[Guided setup and missing details]
+  S --> B[Scope, timed script and budget]
   B --> G1{Treatment review}
   G1 --> C[Select assets and visual direction]
   C --> G2{Visual review if needed}
@@ -81,6 +82,29 @@ Public GitHub availability is separate from listing in OpenAI's universal plugin
 
 ## Set up the production tools
 
+You can ask the skill to guide this step:
+
+```text
+Use jiffi-video-studio. Check what already works in this environment, ask me
+only for the details you still need, and help me set up the tools for my video.
+```
+
+**Stage 0 runs on first use**, even if you start with a video concept. The agent
+checks the host and existing setup, identifies the production route, then asks
+for missing choices such as the project folder, source media, target outputs,
+provider/workspace and budget. It explains how to install or connect anything
+missing and verifies the result. Returning users resume from local setup records.
+
+Only relevant tools need setup. A script needs no paid account; an edit of your
+own footage needs no generation service. Optional Blender, Resolve and Gemini
+routes are checked when selected. If execution is unavailable, the agent can
+still develop the scope and explain where to continue production.
+
+**Never paste API keys, passwords or tokens into the conversation.** Account
+setup uses the provider's sign-in flow or private environment settings. The skill
+records whether access works, not your credentials. See the
+[guided setup steps](skills/jiffi-video-studio/references/00-setup-and-hosts.md).
+
 | Requirement | Needed for | Setup |
 | --- | --- | --- |
 | Python 3.9+ | Installer, studio setup, delivery checker | Install Python and ensure `python3` is on PATH. On Windows use `py -3` where appropriate. |
@@ -119,7 +143,10 @@ python3 skills/jiffi-video-studio/scripts/studio.py doctor ../my-video-studio --
 python3 skills/jiffi-video-studio/scripts/studio.py smoke
 ```
 
-Edit `../my-video-studio/AGENTS.md` to record the actual budget, allowed providers and data policy. `CLAUDE.md` points Claude Code to that shared policy. The initial budget is unset, so setup does **not** authorise paid jobs.
+The agent helps record the actual budget, allowed providers and data policy in
+`../my-video-studio/AGENTS.md`. `CLAUDE.md` points Claude Code to that shared policy.
+`setup/status.md` keeps non-secret setup results and the next unresolved step.
+The initial budget is unset, so setup does **not** authorise paid jobs.
 
 For generation, after login:
 
@@ -128,6 +155,10 @@ python3 skills/jiffi-video-studio/scripts/studio.py doctor ../my-video-studio --
 ```
 
 Use `--higgsfield-cli /absolute/path/to/higgsfield` for a local wrapper. Without `--online`, the doctor makes no provider requests. Online mode only reads the account, workspace list and model catalogue, suppressing private output. The smoke test encodes and decodes synthetic media locally. Neither command uploads media or starts paid generation. A successful doctor is a prerequisite check, not a production approval.
+
+The doctor's `next_steps` explain how to fix failed checks and which unchecked
+items need human or host verification. Optional items are labelled, so missing
+Blender or Gemini access does not block an unrelated edit or script.
 
 Resolve, browser and Blender connections still need a small real execution check. The [setup reference](skills/jiffi-video-studio/references/00-setup-and-hosts.md) explains what to test and how to preserve an existing Resolve project. The [setup checklist](docs/setup-checklist.md) covers first-run evidence, audio calibration and paid tests.
 

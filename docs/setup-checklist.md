@@ -2,15 +2,22 @@
 
 Use this as an evidence checklist. Installed tools and successful logins do not prove the full production route works.
 
+The agent guides this process through
+[Stage 0](../skills/jiffi-video-studio/references/00-setup-and-hosts.md).
+It inspects existing capabilities first, asks a short batch of questions for
+missing choices, and gives specific setup instructions for the selected route.
+Do not ask a returning user to repeat settled details or require optional tools
+for an unrelated project. Never request secret values in chat.
+
 1. Install one skill/plugin copy per host. Confirm the host can discover it and read a referenced file from the installed skill folder.
 2. Initialise a separate studio. Set the real provider/data policy, budget and browser preference. Do not assert a clean profile or training-off arrangement without evidence. If your organisation requires them, resolve them before uploads.
-3. Run `studio.py doctor` in the intended execution environment. Fix missing dependencies for the route, then run the local `smoke` test. Keep the output in the studio's `setup/` folder.
+3. Run `studio.py doctor` in the intended execution environment. Use its `next_steps` to fix missing dependencies for the route, then run the local `smoke` test for media work. Planning uses `--mode plan` and skips media tests. Keep non-secret evidence and the next unresolved step in `setup/status.md`; `init` preserves that file on later runs.
 4. If using Higgsfield, complete its browser login, choose the workspace, and use the online doctor. Then inspect the actual image, video and audio model schemas. Select models available to this account rather than copying historic IDs blindly.
 5. If using Resolve, test a separate synthetic project: import a clip, trim to a known frame count, add sound and a graphic, export, decode the whole output, save a DRP and reopen it with its media. Check actual source ranges and frame counts, since API endpoint conventions can vary. Preserve the user's existing project and restore it afterwards.
 6. If using Blender, run a small headless render and inspect it. Check scale, camera, lighting and output paths. Installing a Blender MCP does not replace a render check.
 7. If using browser capture, verify that the host can read/control the intended browser and save a local output. Login is completed by the user in the provider's flow. Restrict browsing to the authorised sites and task.
 8. For the optional Gemini adapter, use its `--check` for model access and `--dry-run` for input validation. Any live review requires clearance for the selected media and a review budget. Calibrate with known material and retain disagreements with the user.
-9. If paid generation is needed, ask for a specific setup cap, quote the small synthetic test and reserve the amount before submission. Test the exact reference-media route you intend to use, download and decode the result, then reconcile actual charges/refunds. Do not treat a slow job or transport timeout as a reason to submit a duplicate.
+9. If paid generation is needed, use an explicit cap that covers the small synthetic test, quote it and reserve the amount before submission. Ask only if existing authorisation does not cover it. Test the exact reference-media route you intend to use, download and decode the result, then reconcile actual charges/refunds. Do not treat a slow job or transport timeout as a reason to submit a duplicate.
 10. Record which routes passed, failed or remain untested. Keep technical checks, source/consent review, continuity, sound fit and continuous playback as separate verdicts.
 
 ## What you need to provide for a video

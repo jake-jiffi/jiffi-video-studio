@@ -6,6 +6,7 @@
 - Subject and factual/fictional status:
 - Treatment, tone and visual style:
 - Route: generation / capture / supplied footage / mixed:
+- Setup evidence: setup/status.md at the studio root; required capabilities and unresolved dependencies:
 - Target runtime: exact / range / proposal, with reason:
 - Deliverables: files, shapes, resolution, frame rate and intended use:
 - Sound, captions, branding and accessibility requirements:

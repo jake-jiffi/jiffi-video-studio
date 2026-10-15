@@ -50,8 +50,11 @@ If `cast-registry.json` is missing, this is the first run: copy
 
 ## Starting or resuming
 
+- **First run or changed environment:** start Stage 0 below before promising
+  production. On a returning run, read `setup/status.md` and the project brief,
+  reuse settled choices and recheck only changed or failing capabilities.
 - **New idea:** create `projects/<slug>/` (short, lowercase, hyphens), copy `assets/project-brief-template.md`
-  to `brief/brief.md`, then start Stage 1.
+  to `brief/brief.md`, complete the relevant setup checks, then start Stage 1.
 - **Existing project** ("carry on with..."): read `brief/brief.md`, find the
   status and gate log, and continue from the next incomplete step. Do not
   redo an approved gate unless the user asks.
@@ -82,6 +85,7 @@ Read each stage file when you reach that stage, not before.
 
 | Stage | Read | Produces | Ends with |
 |---|---|---|---|
+| 0. Guided setup and intake | references/00-setup-and-hosts.md | missing details resolved, route-specific setup instructions and local setup/status.md evidence | next work identified; only dependent work waits |
 | 1. Treatment and script | references/01-concept.md, references/10-concept-to-script.md | scoped brief, timed production script or selects, shot records, asset dependencies, estimate and delivery proposal | Gate 1 for production |
 | 2. Assets and visual direction, if needed | references/02-casting.md | selected media and necessary references | Gate 2, if applicable |
 | 3. Visual planning, when useful | references/07-storyboarding.md, then references/03-previz.md if spatial rehearsal is needed | boards, timed animatic or 3D rehearsal, proportional to uncertainty | |
@@ -122,9 +126,26 @@ technical measurements and the audience's verdict are separate evidence.
 
 ## Host setup and tool access
 
-Read `references/00-setup-and-hosts.md` on first use or after changing hosts.
+Stage 0 is a guided conversation and check, not a checklist handed to the user
+to figure out alone. Read `references/00-setup-and-hosts.md` on first use or
+after changing hosts. Inspect what this session can already do, use the brief
+and existing policy, and ask a short batch of questions only for missing details
+that affect the selected route. Explain each missing tool's purpose, the exact
+local setup step or official installer, who needs to act and how you will test it.
+Never ask users to paste passwords, API keys, tokens or cookies. Account details
+mean service/workspace choice and sign-in status, not secret values or unrelated
+personal information. Let them authenticate in the provider flow or configure
+secrets privately in the execution environment.
+
 Run the bundled `scripts/studio.py doctor` for the selected route before
-production. A discovered executable is not proof of a working account,
+production, use its `next_steps`, and keep non-secret results in `setup/status.md`.
+Install or configure required local dependencies within the user's authorisation;
+guide them through login, administrator access or missing host capabilities when
+their action is needed. Recheck after each repair. Optional tools are only needed
+if the project selects them. Planning can continue while rendering setup waits.
+Reuse prior decisions and successful checks on subsequent runs, revalidating
+changed or failing capabilities. This does not create another approval gate.
+A discovered executable is not proof of a working account,
 connected MCP server or successful render. Record those checks separately.
 Use only capabilities actually present in this session. Native tool names,
 browser control and image generation differ between hosts; the shared CLI,

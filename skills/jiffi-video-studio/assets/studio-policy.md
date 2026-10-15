@@ -2,6 +2,7 @@
 
 Use the installed `jiffi-video-studio` skill for video planning, creation and editing.
 
+- First run: follow the skill's Stage 0. Inspect this host, ask only for missing project choices and explain setup steps for the selected route. Keep non-secret evidence in `setup/status.md`; reuse it on later runs and recheck changed or failing capabilities.
 - Paid generation budget: **unset, no paid submissions authorised**. Record an explicit project cap before submitting jobs. Browser jobs count towards the same cap. Gemini review costs use a separate provider budget.
 - Approved providers: **not configured**. Record the services allowed for this project before uploads. Apply any organisation-specific vendor review or training/data requirements.
 - Media permission: **not configured**. Record ownership, licences and real-person consent for the material used. Inspect supplied media for unrelated confidential information.

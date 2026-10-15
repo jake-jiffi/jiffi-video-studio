@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "jiffi-video-studio",
+  "version": "0.1.0",
+  "description": "A concept-to-delivery video workflow with continuity, scene sound, credit budgets and technical checks.",
+  "author": {
+    "name": "Jake Shelley",
+    "url": "https://github.com/jake-jiffi"
+  },
+  "homepage": "https://github.com/jake-jiffi/jiffi-video-studio",
+  "repository": "https://github.com/jake-jiffi/jiffi-video-studio",
+  "license": "MIT",
+  "keywords": [
+    "video",
+    "filmmaking",
+    "higgsfield",
+    "resolve",
+    "blender",
+    "audio"
+  ]
+}

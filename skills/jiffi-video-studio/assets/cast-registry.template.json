@@ -1,0 +1,25 @@
+{
+  "_note": "Lives in the studio root. Paths are relative to the studio root. Add entries, never overwrite. Real people need consent.",
+  "_example_character": {
+    "id": "priya-sales",
+    "name": "Priya",
+    "type": "generated | real",
+    "role": "Sales lead",
+    "description": "Early 30s, sharp black bob, mustard blazer, silver hoops. Confident, fast, over-promises.",
+    "master": "cast/priya-sales/master.png",
+    "sheet": "cast/priya-sales/sheet.png",
+    "soul_id": "",
+    "voice": "",
+    "consent": "n/a (generated) | yes, <date>, confirmed by <reviewer name>",
+    "used_in": ["slop-grenades"]
+  },
+  "_example_location_or_prop": {
+    "id": "office-main",
+    "description": "Open-plan office, four desk pods with taped paper department signs, one far desk marked CLIENT.",
+    "images": ["locations/office-main/wide.png"],
+    "used_in": []
+  },
+  "characters": [],
+  "locations": [],
+  "props": []
+}

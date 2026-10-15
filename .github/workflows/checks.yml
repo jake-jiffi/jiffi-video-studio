@@ -1,0 +1,28 @@
+name: Package and offline checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install FFmpeg on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg on macOS
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
+      - run: python3 -m unittest discover -s tests -v
+      - run: node --test skills/jiffi-video-studio/scripts/gemini-review.test.mjs
+      - run: python3 skills/jiffi-video-studio/scripts/studio.py smoke
+      - run: python3 scripts/check_package.py

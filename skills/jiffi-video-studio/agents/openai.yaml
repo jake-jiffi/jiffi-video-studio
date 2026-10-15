@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jiffi Video Studio"
+  short_description: "Create or edit video to fit the subject, style and length"
+  default_prompt: "Use $jiffi-video-studio to create or edit a video from this brief: "

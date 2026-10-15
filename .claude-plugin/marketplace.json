@@ -1,0 +1,17 @@
+{
+  "name": "jiffi-video-studio-marketplace",
+  "owner": {
+    "name": "Jake Shelley"
+  },
+  "plugins": [
+    {
+      "name": "jiffi-video-studio",
+      "source": "./",
+      "description": "A concept-to-delivery video workflow with continuity, scene sound, credit budgets and technical checks.",
+      "version": "0.1.0"
+    }
+  ],
+  "metadata": {
+    "description": "Video planning, production, sound and delivery checks for local agent workflows."
+  }
+}

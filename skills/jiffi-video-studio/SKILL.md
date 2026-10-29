@@ -172,6 +172,7 @@ vendors. Install only dependencies needed for the selected route.
 | Voice | Higgsfield CLI `text2speech_v2`, or the user's own recording | Seedance native audio |
 | Music, when required | Appropriately licensed supplied track | Original cue through the authorised Higgsfield account, with live model/quote checks and source terms recorded |
 | Edit | DaVinci Resolve Studio via the DaVinci Resolve MCP | computer control of Resolve, then ffmpeg |
+| Dialogue transcription and word timing | Resolve transcription when editing in Resolve | Local whisper.cpp with DTW timing, per `references/05-edit.md` |
 | Checks | `scripts/verify_project.py` (uses ffprobe and ffmpeg) | |
 | Audio/video analysis | Authorised Gemini API through `scripts/gemini-review.mjs`, using an API key supplied through the process environment | User listening feedback; retain unverified judgements |
 

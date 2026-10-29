@@ -8,7 +8,8 @@ DaVinci Resolve Studio through the DaVinci Resolve MCP. Resolve must be open
 with Preferences, System, General, External scripting set to Local. If the
 MCP is not connected, drive the Resolve UI with computer control. If Resolve
 is unavailable, assemble with ffmpeg and tell the user what is missing (styled
-captions, grade, reframe).
+captions, grade, reframe). Transcribe dialogue with local whisper.cpp, as in
+"Check actual dialogue timing".
 
 ## Tested Resolve compatibility
 
@@ -90,6 +91,31 @@ local word and timing checks. Open the Edit page first. Both exported MP4s
 and decoded WAVs returned False/None for transcription while the Deliver page
 was active, then transcribed successfully after `resolve.OpenPage("edit")`. Save the source and rendered transcripts.
 Convert their timecodes using the relevant clip frame rate.
+
+Without Resolve, use local whisper.cpp. `<model>` is the GGML model file set
+up in Stage 0. Convert the audio to 16 kHz mono WAV, then request one word
+per segment with DTW token timing:
+
+```sh
+ffmpeg -i source.mov -vn -ar 16000 -ac 1 -c:a pcm_s16le dialogue.wav
+whisper-cli -m "<model>" -f dialogue.wav -l en -ml 1 -sow -nfa \
+  --dtw large.v3.turbo -ojf -of dialogue
+```
+
+Set `-l` to the dialogue's language and `--dtw` to the preset that names the
+model. Time each word from its tokens' `t_dtw` values in `dialogue.json`,
+which count in 10 ms units. Do not time cuts from segment offsets. Keep
+`-nfa`: whisper.cpp 1.9.5 turns flash attention on by default, and flash
+attention silently disables DTW. The log then says
+`dtw_token_timestamps is not supported with flash_attn` and every `t_dtw`
+is -1.
+
+In the October 2026 test on clean synthetic speech, the default settings gave
+the three words after a 1.5-second pause one shared timestamp, 0.37 s early.
+With `-nfa` and DTW, the first of them landed 0.11 s after the measured onset
+and every word stayed in order. Segment offsets still stretched across the
+pause. Noisy, accented or overlapping dialogue is untested, so check its
+transcript against the audio.
 
 Compare the exact words and actual performance interval for every speaker.
 If using the original preset recording in the edit, align it to that interval

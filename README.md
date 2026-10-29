@@ -112,6 +112,7 @@ records whether access works, not your credentials. See the
 | Node.js 22+ and npm | Gemini adapter and documented Higgsfield install | Install an active supported Node release. The core Python helpers have no pip dependencies. |
 | Higgsfield CLI + account | Higgsfield image, video, voice or music jobs | Install, log in, choose a workspace, check available models and approve a project cap. |
 | DaVinci Resolve Studio | Resolve editing route | Install separately, enable local scripting where supported, verify your host's MCP or official Python API connection. |
+| whisper.cpp + GGML model | Dialogue transcription and word timing without Resolve | Install whisper.cpp (Homebrew formula `whisper.cpp`), download a GGML model and check its SHA-256. Run it with `-nfa` when using `--dtw`, or word timing is silently skipped. |
 | Blender | Optional 3D planning | Install separately; put `blender` on PATH or provide its absolute executable path. |
 | Chrome/Chromium or Resolve titles | Exact typography and graphics | Use an available local rendering route. Signed-in browsing needs a separate host browser connection. |
 | Gemini API access | Optional advisory audio/video analysis | Configure a key in the execution process environment, outside chat. Costs are separate from Higgsfield credits. |

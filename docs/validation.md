@@ -33,6 +33,23 @@ The executable checks cover missing dependencies, next actions, preserved setup
 records, offline behaviour and suppression of both successful and failed private
 account responses.
 
+## Local transcription without Resolve
+
+Checked on macOS with an Apple M4 Max on 30 October 2026, using whisper.cpp
+1.9.5 from Homebrew and `ggml-large-v3-turbo-q5_0.bin`. The model's SHA-256
+matched the hash Hugging Face lists. Both clips were synthetic macOS speech
+with one clean speaker and no music.
+
+| Check | Result |
+| --- | --- |
+| 5.2-second clip with a measured 1.5-second pause: words | 13 of 13 correct |
+| Default settings: word timing after the pause | Failed: three words shared one timestamp, 0.37 s early |
+| `-nfa --dtw large.v3.turbo`: word timing after the pause | First word 0.11 s after the measured onset; every word in order |
+| 32.1-second narration: words and speed | 94 of 94 correct in 1.4 s, including model load |
+
+Flash attention is on by default in this version and silently disables DTW.
+Real dialogue with noise, accents or crosstalk is untested.
+
 ## Historical production evidence
 
 The original private workflow was exercised on macOS through concept development, character references, local Blender planning, Higgsfield generation, Resolve Studio editing, locally rendered graphics, audio processing and final export/recovery. Feedback from those runs led to the continuity, acting, eyeline, sound and audio-review guidance retained here. Private production media and account records are not published.

@@ -86,6 +86,7 @@ dependencies just to write a script. For generation, start offline, then use
 | Higgsfield CLI missing | Use the [official CLI instructions](https://higgsfield.ai/cli). The tested npm route is `npm install -g @higgsfield/cli@1.1.26`. A local wrapper can be passed with `--higgsfield-cli`. | CLI version command, provider login, workspace selection, then online doctor. |
 | Higgsfield signed out or wrong workspace | Start `higgsfield auth login`; the user completes browser authentication. Inspect workspace choices locally and confirm the intended one when ambiguous. Use `higgsfield workspace set WORKSPACE_ID`. | Read-only online doctor, followed by current model/schema checks. |
 | Gemini key unavailable | Follow Google's [API-key setup](https://ai.google.dev/gemini-api/docs/api-key). Have the user configure `GEMINI_API_KEY` or `GOOGLE_API_KEY` through the host's private environment/secret settings, or their local secret manager. Provide host-specific guidance if asked. Do not put the value in a chat message, command argument, shell history, studio file or repository. | Run `gemini-review.mjs --check` in the actual execution process. Do not use `echo`, `printenv` or inspect credential files. |
+| whisper.cpp missing for an edit without Resolve | Install it from the [official project](https://github.com/ggml-org/whisper.cpp) or a package manager (the Homebrew formula is `whisper.cpp`). Download a GGML model such as `ggml-large-v3-turbo-q5_0.bin` from the [model repository](https://huggingface.co/ggerganov/whisper.cpp) to a folder outside the studio and skill. Compare its SHA-256 with the hash Hugging Face lists for that file. | `whisper-cli --help` runs. A short clip with known words and a measured pause transcribes correctly, with `t_dtw` values present (see `05-edit.md`). |
 | Resolve, Blender or browser integration unavailable | Use the selected route's connection checks below. If the host cannot reach the user's desktop, explain that limitation and continue planning or offer an available route. | A small real execution check, not just an executable or MCP listing. |
 
 ## Host routing
@@ -115,6 +116,7 @@ access alone does not provide access to the user's desktop apps or sign-ins.
 - Node.js 22+ for the optional Gemini review adapter and its tests; npm for the documented Higgsfield installation route.
 - Higgsfield CLI and a signed-in account/workspace for Higgsfield generation. No account is needed for supplied-footage editing or script-only work.
 - Resolve Studio with a verified connection for Resolve edits. FFmpeg is an explicit alternate edit route; do not claim it produced a Resolve project.
+- whisper.cpp and a GGML model for dialogue transcription and word timing when Resolve is not the editor.
 - Blender for spatial rehearsal, Google Chrome/Chromium or Resolve titles for exact graphics, as the chosen project needs them.
 
 For Higgsfield, run `higgsfield auth login` and let the user complete the

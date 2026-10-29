@@ -33,6 +33,8 @@ The executable checks cover missing dependencies, next actions, preserved setup
 records, offline behaviour and suppression of both successful and failed private
 account responses.
 
+Version 0.2.1 adds local transcription with whisper.cpp for edits without Resolve. Its evidence is in the next section.
+
 ## Local transcription without Resolve
 
 Checked on macOS with an Apple M4 Max on 30 October 2026, using whisper.cpp
